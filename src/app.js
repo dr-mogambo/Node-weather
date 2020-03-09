@@ -48,6 +48,7 @@ const viewsPath = path.join(__dirname,'../templates/views')
 const partialsPath = path.join(__dirname,'../templates/partials')
 
 const app = express()
+const port = process.env.PORT||3000
 
 app.set('view engine', 'hbs')
 app.set('views',viewsPath)//$$$ we are setting up the views path to where ever we want and not constrained by always putting it in views directory
@@ -171,8 +172,8 @@ app.get('*',(req,res)=>{ //the * here means match anything that hasnt been match
 // we need to start the app.listen just once to start the server and make it to listen to the requests
 // we configure it by giving it a port, in general the production servers have default ports
 //cntrl+C to close the server
-app.listen(3000, ()=>{
-    console.log('server started on port 3000')
+app.listen(port, ()=>{
+    console.log('server started on port'+ port)
 })
 
 
@@ -181,6 +182,8 @@ app.listen(3000, ()=>{
 ////////////////////////////////////////////////////////////////////
 // install heroku, login with command heroku login, and then login with a browser
 //untracked files, unstaged changes, staged changes, commits
+//git init is used to first create a git reposotory
+
 
 // Git Status gives us a list of files and their commit status
 // we do not want our node modules folder to be tracked with GIT so we create a file called .gitignore and add that folder there
@@ -188,7 +191,35 @@ app.listen(3000, ()=>{
 // to add all files to be tracked we type git add .
 // we can finally run git commit with a message describing what the change was
 
+///////////////////////////////////////////////////////////////////
+//////********Moving code from our machine to Heroku and GIT**********///////////////
+////////////////////////////////////////////////////////////////////
 
+//////////////setting up ssh//////////////
+// we do this by SSH where 2 pairs of files, we generate these by running few commands from terminal of gitbash and not our local terminal
+// we generate the key by running this command
+// to see the keys created we use the command $ ls  -l ~/.ssh
 
+// now run the ssh agent eval "$(ssh-agent -s)" (had to run this on git bash for it to work), this will generate a PID. it showed 1997 for me
+// now to register the file ssh-add  ~/.ssh/id_rsa (had to run in git bash for this to work)
 
+//////////// pushing to GIT///////////////
+//clicked on + and created a repo, then clicked continue and selected push from exiting repo
+// now we run the first command git remote add origin https://github.com/dr-mogambo/Node-weather.git
+// before we run the enxt command we have to add our ssh key to github
+// to get the contents of this ssh key we run the command cat ~/.ssh/id_rsa.pub
+// now after adding the ssh public key to github, we will check our connection by running ssh -T git@github.com
 
+// now we can push our code by running the second command git push -u origin master
+
+//////////// pushing to heroku///////////////
+// select the key we need by running the command heroku keys:add, hit y to send this key to heroku
+// now to create our application we run the command from our root directory(webserver) heroku create app-name
+// the app name needs to be unique
+//this will show 2 urls, one is our heroku url and other is the git repository where it wants our app code to be pushed. right now our app will be empty, lets configure on heroku
+// we need to load our node modules within heroku so we add scripts for heroku to run
+// add a start script with node src/app.js 
+// now we need to modify the port within our app.js, since its not local. this value is provided by heroku by environment variable, check line 51 where we do this
+//now in the app.js file within our public directory we change reference to local port and give the absolute path within the fetch call
+// make a commit and upload code to heroku
+// check git status
