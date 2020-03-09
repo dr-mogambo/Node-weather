@@ -223,3 +223,10 @@ app.listen(port, ()=>{
 //now in the app.js file within our public directory we change reference to local port and give the absolute path within the fetch call
 // make a commit and upload code to heroku
 // check git status
+// there will be 3 files shown which have changed, in our case the node app.js the front end app.js and the package.json file
+
+// now pus the code to git with git add.--> git commit --> git push (this will push code to our git)
+// now we push the code to git remote from heroku, to do this lets list out all the remote git repos we have "git remote" run this command, it will show origin and heroku
+// now run command "git push heroku master"
+
+////////////new feature deployment workflow///////////////
